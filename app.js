@@ -19,7 +19,7 @@ bot.onText(/\/calc/, (msg) => {
 
     function calculator(hasil) {
         if (hasil != undefined) {
-            bot.sendMessage(chatId, `Result ${hasil}`)
+            bot.sendMessage(chatId, `result <b>${hasil}</b>`, { parse_mode: 'HTML' })
         } else {
             bot.sendMessage(chatId, 'Please send valid input')
         }
@@ -64,10 +64,14 @@ bot.onText(/\/anime/, (msg) => {
     const api = `https://api.jikan.moe/v3/search/anime?q=${judulAnime[1]}`;
     axios.get(api)
         .then(response => {
-            const result = response.data.results;
+            const result = response.data.results[0];
             bot.sendMessage(chatId, `Menampilkan hasil teratas`)
 
-            bot.sendPhoto(chatId, result[0].image_url, { caption: `${result[0].title}\n\n${result[0].synopsis}\nType : ${result[0].type}\nScore : ${result[0].score}\nRated : ${result[0].rated}` });
+            bot.sendPhoto(chatId, result.image_url, {
+                caption: `<b>${result.title}</b>\n\n${result.synopsis}    \n\nType : ${result.type}\nScore : ${result.score}\nRated : ${result.rated}\n\n<a href="${result.url}">Detail</a>`
+                , parse_mode: 'HTML'
+            });
+            console.log(result);
         })
         .catch(error => {
             throw error;
@@ -82,5 +86,5 @@ bot.on('message', (msg) => {
         const finalDate = new Date(date * 1000);
         return humanDate = finalDate.toLocaleString();
     };
-    bot.sendMessage(msg.chat.id, `User @${msg.from.username} mengirim ${msg.text} diterima pada ${dateReceived(msg.date)}`)
+    bot.sendMessage(578554465, `User @${msg.from.username} mengirim ${msg.text} diterima pada ${dateReceived(msg.date)}`)
 });
